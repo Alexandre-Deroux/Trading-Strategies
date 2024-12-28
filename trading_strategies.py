@@ -4,10 +4,10 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Streamlit page configuration
-st.set_page_config(page_title="Market Finance Strategies", layout="wide")
+st.set_page_config(page_title="Trading Strategies", layout="wide")
 
 # Application title
-st.title("Market Finance Strategies")
+st.title("Trading Strategies")
 
 # Select Strategy
 st.sidebar.header("Strategy Selection")
