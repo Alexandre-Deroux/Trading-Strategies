@@ -4,7 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 
 # Streamlit page configuration
-st.set_page_config(page_title="📈 Trading Strategies", layout="wide")
+st.set_page_config(page_title="Trading Strategies", page_icon="📈", layout="wide")
 
 # Application title
 st.title("📈 Trading Strategies")
