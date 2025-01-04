@@ -10,15 +10,15 @@ st.set_page_config(page_title="Trading Strategies", page_icon="📈", layout="wi
 st.title("📈 Trading Strategies")
 
 # Select Strategy
-st.sidebar.header("📊 Strategy Selection")
-strategy = st.sidebar.selectbox(
+st.header("📊 Strategy Selection")
+strategy = st.selectbox(
     "Choose a Strategy:",
     ["Moving Averages", "RSI (Relative Strength Index)", "MACD (Moving Average Convergence Divergence)"]
 )
 
 # Asset Parameters
-st.sidebar.header("📌 Asset Parameters")
-index = st.sidebar.selectbox("Select an Index:", ["S&P 500", "NASDAQ-100", "Dow Jones", "CAC 40"])
+st.header("📌 Asset Parameters")
+index = st.selectbox("Select an Index:", ["S&P 500", "NASDAQ-100", "Dow Jones", "CAC 40"])
 tickers_index_average = {
     "S&P 500": "^GSPC",
     "NASDAQ-100": "^NDX",
@@ -31,11 +31,11 @@ tickers = {
     "Dow Jones": pd.read_html("https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average")[2]["Symbol"].tolist(),
     "CAC 40": pd.read_html("https://en.wikipedia.org/wiki/CAC_40")[4]["Ticker"].tolist()
 }
-ticker = st.sidebar.selectbox(f'Select an Asset from {index} or "Index Average":', ["Index Average"] + tickers[index])
+ticker = st.selectbox(f'Select an Asset from {index} or "Index Average":', ["Index Average"] + tickers[index])
 if ticker == "Index Average":
     ticker = tickers_index_average[index]
-start_date = st.sidebar.date_input("Start Date", pd.to_datetime("2020-01-01"))
-end_date = st.sidebar.date_input("End Date", pd.to_datetime("today"))
+start_date = st.date_input("Start Date", pd.to_datetime("2020-01-01"))
+end_date = st.date_input("End Date", pd.to_datetime("today"))
 
 # Load asset data
 @st.cache_data
@@ -47,14 +47,14 @@ def load_data(ticker, start_date, end_date):
 data = load_data(ticker, start_date, end_date)
 
 if data.empty:
-    st.error("❌ No data available for the specified asset. Please check the ticker or dates.")
+    st.error("❌ No data available for the specified asset. Please check the asset or dates.")
 else:
     # Strategy: Moving Averages
     if strategy == "Moving Averages":
         # Strategy Parameters
-        st.sidebar.header("⚙️ Moving Averages Parameters")
-        short_window = st.sidebar.slider("Short Moving Average Period (days):", 5, 50, 20)
-        long_window = st.sidebar.slider("Long Moving Average Period (days):", 50, 200, 100)
+        st.header("⚙️ Moving Averages Parameters")
+        short_window = st.slider("Short Moving Average Period (days):", 5, 50, 20)
+        long_window = st.slider("Long Moving Average Period (days):", 50, 200, 100)
 
         # Calculate moving averages
         data["Short_MA"] = data["Close"].rolling(window=short_window).mean()
@@ -83,8 +83,8 @@ else:
     # Strategy: RSI
     elif strategy == "RSI (Relative Strength Index)":
         # RSI Calculation
-        st.sidebar.header("⚙️ RSI Parameters")
-        rsi_period = st.sidebar.slider("RSI Period (days):", 5, 50, 14)
+        st.header("⚙️ RSI Parameters")
+        rsi_period = st.slider("RSI Period (days):", 5, 50, 14)
 
         delta = data["Close"].diff()
         gain = (delta.where(delta > 0, 0)).rolling(window=rsi_period).mean()
@@ -123,10 +123,10 @@ else:
     # Strategy: MACD Strategy
     elif strategy == "MACD (Moving Average Convergence Divergence)":
         # MACD Strategy Parameters
-        st.sidebar.header("⚙️ MACD Parameters")
-        short_ema = st.sidebar.slider("Short EMA Period (days):", 5, 50, 12)
-        long_ema = st.sidebar.slider("Long EMA Period (days):", 20, 200, 26)
-        signal_period = st.sidebar.slider("Signal Line EMA Period (days):", 5, 20, 9)
+        st.header("⚙️ MACD Parameters")
+        short_ema = st.slider("Short EMA Period (days):", 5, 50, 12)
+        long_ema = st.slider("Long EMA Period (days):", 20, 200, 26)
+        signal_period = st.slider("Signal Line EMA Period (days):", 5, 20, 9)
         
         # Calculate MACD
         data["Short_EMA"] = data["Close"].ewm(span=short_ema, adjust=False).mean()
@@ -177,11 +177,11 @@ else:
     st.pyplot(fig)
 
     # Performance Summary
-    st.sidebar.subheader("📈 Performance Summary")
+    st.subheader("📈 Performance Summary")
     total_return = data["Return"].sum()
     strategy_return = data["Strategy_Return"].sum()
-    st.sidebar.metric("Total Market Return (%)", f"{total_return * 100:.2f}")
-    st.sidebar.metric("Total Strategy Return (%)", f"{strategy_return * 100:.2f}")
+    st.metric("Total Market Return (%)", f"{total_return * 100:.2f}")
+    st.metric("Total Strategy Return (%)", f"{strategy_return * 100:.2f}")
 
 # Author
 st.markdown("""Made by [Alexandre Deroux](https://www.linkedin.com/in/alexandre-deroux).""", unsafe_allow_html=True)
