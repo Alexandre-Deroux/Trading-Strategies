@@ -26,10 +26,17 @@ tickers_index_average = {
     "CAC 40": "^FCHI"
 }
 tickers = {
-    "S&P 500": pd.read_html("https://en.wikipedia.org/wiki/List_of_S%26P_500_companies")[0]["Symbol"].tolist(),
-    "NASDAQ-100": pd.read_html("https://en.wikipedia.org/wiki/NASDAQ-100")[4]["Symbol"].tolist(),
-    "Dow Jones": pd.read_html("https://en.wikipedia.org/wiki/Dow_Jones_Industrial_Average")[2]["Symbol"].tolist(),
-    "CAC 40": pd.read_html("https://en.wikipedia.org/wiki/CAC_40")[4]["Ticker"].tolist()
+    "S&P 500": list(pd.read_csv("https://datahub.io/core/s-and-p-500-companies/r/0.csv")["Symbol"]),
+    "NASDAQ-100": list(pd.read_csv("https://datahub.io/core/nasdaq-listings/r/0.csv")["Symbol"]),
+    "Dow Jones": [
+        "AAPL", "AMGN", "AXP", "BA", "CAT", "CRM", "CSCO", "CVX", "DIS", "DOW", "GS", "HD", "HON", "IBM", "INTC",
+        "JNJ", "JPM", "KO", "MCD", "MMM", "MRK", "MSFT", "NKE", "PG", "TRV", "UNH", "V", "VZ", "WBA", "WMT"
+    ],
+    "CAC 40": [
+        "AC.PA", "AI.PA", "AIR.PA", "ALO.PA", "ATO.PA", "BNP.PA", "CRI.PA", "CA.PA", "CAP.PA", "CS.PA", "DSY.PA", "ENGI.PA",
+        "ELIOR.PA", "EN.PA", "ERF.PA", "HO.PA", "KER.PA", "LR.PA", "MC.PA", "ML.PA", "MT.PA", "OR.PA", "ORA.PA", "PUB.PA", "RI.PA",
+        "RNO.PA", "SAF.PA", "SAN.PA", "SGO.PA", "STLA.PA", "STM.PA", "SU.PA", "SW.PA", "TEC.PA", "TTE.PA", "URW.AS", "VIV.PA"
+    ]
 }
 ticker = st.sidebar.selectbox(f'Select an Asset from {index} or "Index Average":', ["Index Average"] + tickers[index])
 if ticker == "Index Average":
@@ -94,8 +101,8 @@ else:
 
         # Generate buy/sell signals
         data["Signal"] = 0
-        data.loc[data["RSI"] < 30, "Signal"] = 1  # Buy when RSI < 30
-        data.loc[data["RSI"] > 70, "Signal"] = -1  # Sell when RSI > 70
+        data.loc[data["RSI"] < 30, "Signal"] = 1 # Buy when RSI < 30
+        data.loc[data["RSI"] > 70, "Signal"] = -1 # Sell when RSI > 70
 
         # Strategy returns
         data["Strategy_Return"] = data["Signal"].shift(1) * data["Return"]
