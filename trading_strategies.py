@@ -47,7 +47,7 @@ end_date = st.sidebar.date_input("End Date", pd.to_datetime("today"))
 # Load asset data
 @st.cache_data
 def load_data(ticker, start_date, end_date):
-    data = yf.download(ticker, start=start_date, end=end_date)
+    data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=True)
     data["Return"] = data["Close"].pct_change()
     return data
 
