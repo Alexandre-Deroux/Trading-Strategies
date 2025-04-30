@@ -45,30 +45,30 @@ start_date = st.sidebar.date_input("Start Date", pd.to_datetime("2020-01-01"))
 end_date = st.sidebar.date_input("End Date", pd.to_datetime("today"))
 
 # Load asset data
-# @st.cache_data
-# def load_data(ticker, start_date, end_date):
-#     data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=True)
-#     data["Return"] = data["Close"].pct_change()
-#     return data
-@st.cache_data(show_spinner=False)
+@st.cache_data
 def load_data(ticker, start_date, end_date):
-    try:
-        if not ticker:
-            st.warning("⚠️ Aucun ticker fourni.")
-            return pd.DataFrame()
+    data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=True)
+    data["Return"] = data["Close"].pct_change()
+    return data
+# @st.cache_data(show_spinner=False)
+# def load_data(ticker, start_date, end_date):
+#     try:
+#         if not ticker:
+#             st.warning("⚠️ Aucun ticker fourni.")
+#             return pd.DataFrame()
 
-        data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=True, progress=False)
+#         data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=True, progress=False)
 
-        if data.empty:
-            st.warning(f"⚠️ Aucune donnée trouvée pour le ticker `{ticker}`.")
-            return pd.DataFrame()
+#         if data.empty:
+#             st.warning(f"⚠️ Aucune donnée trouvée pour le ticker `{ticker}`.")
+#             return pd.DataFrame()
 
-        data["Return"] = data["Close"].pct_change()
-        return data
+#         data["Return"] = data["Close"].pct_change()
+#         return data
 
-    except Exception as e:
-        st.error(f"❌ Erreur lors du chargement des données : {e}")
-        return pd.DataFrame()
+#     except Exception as e:
+#         st.error(f"❌ Erreur lors du chargement des données : {e}")
+#         return pd.DataFrame()
 
 data = load_data(ticker, start_date, end_date)
 
