@@ -57,7 +57,7 @@ def load_data(ticker, start_date, end_date):
             st.warning("⚠️ Aucun ticker fourni.")
             return pd.DataFrame()
 
-        data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=True)
+        data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=True, progress=False)
 
         if data.empty:
             st.warning(f"⚠️ Aucune donnée trouvée pour le ticker `{ticker}`.")
