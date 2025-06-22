@@ -9,6 +9,15 @@ st.set_page_config(page_title="Trading Strategies", page_icon="📈", layout="wi
 # Application title
 st.title("📈 Trading Strategies")
 
+# Custom CSS
+st.markdown("""
+    <style>
+        section[data-testid="stSidebar"] {
+            width: 400px !important;
+        }
+    </style>
+""", unsafe_allow_html=True)
+
 # Select Strategy
 st.sidebar.header("📊 Strategy Selection")
 strategy = st.sidebar.selectbox(
@@ -41,11 +50,11 @@ tickers = {
 ticker = st.sidebar.selectbox(f'Select an Asset from {index} or "Index Average":', ["Index Average"] + tickers[index])
 if ticker == "Index Average":
     ticker = tickers_index_average[index]
-start_date = st.sidebar.date_input("Start Date", pd.to_datetime("2020-01-01"))
-end_date = st.sidebar.date_input("End Date", pd.to_datetime("today"))
+start_date = st.sidebar.date_input("Select a Start Date:", pd.to_datetime("2020-01-01"))
+end_date = st.sidebar.date_input("Select an End Date:", pd.to_datetime("today"))
 
 # Load asset data
-@st.cache_data
+@st.cache_data(show_spinner="Data Loading...")
 def load_data(ticker, start_date, end_date):
     data = yf.download(ticker, start=start_date, end=end_date, auto_adjust=True)
     data["Return"] = data["Close"].pct_change()
@@ -109,22 +118,22 @@ else:
 
         # Plot RSI
         st.subheader(f"📊 RSI Strategy for {ticker}")
-        fig, ax = plt.subplots(2, 1, figsize=(14, 10), sharex=True)
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(14, 10), sharex=True)
 
         # Price plot
-        ax[0].plot(data.index, data["Close"], label="Closing Price", color="blue")
-        ax[0].set_title(f"Price of {ticker}")
-        ax[0].set_ylabel("Price")
-        ax[0].legend(loc="upper left")
+        ax1.plot(data.index, data["Close"], label="Closing Price", color="blue")
+        ax1.set_title(f"Price of {ticker}")
+        ax1.set_ylabel("Price")
+        ax1.legend(loc="upper left")
 
         # RSI plot
-        ax[1].plot(data.index, data["RSI"], label="RSI", color="purple")
-        ax[1].axhline(70, color="red", linestyle="--", label="Overbought (70)")
-        ax[1].axhline(30, color="green", linestyle="--", label="Oversold (30)")
-        ax[1].set_title(f"RSI for {ticker}")
-        ax[1].set_xlabel("Date")
-        ax[1].set_ylabel("RSI")
-        ax[1].legend(loc="upper left")
+        ax2.plot(data.index, data["RSI"], label="RSI", color="purple")
+        ax2.axhline(70, color="red", linestyle="--", label="Overbought (70)")
+        ax2.axhline(30, color="green", linestyle="--", label="Oversold (30)")
+        ax2.set_title(f"RSI for {ticker}")
+        ax2.set_xlabel("Date")
+        ax2.set_ylabel("RSI")
+        ax2.legend(loc="upper left")
         st.pyplot(fig)
 
     # Strategy: MACD Strategy
@@ -143,8 +152,8 @@ else:
 
         # Generate buy/sell signals based on MACD crossovers
         data["Signal"] = 0
-        data.loc[data["MACD"] > data["Signal_Line"], "Signal"] = 1  # Buy
-        data.loc[data["MACD"] < data["Signal_Line"], "Signal"] = -1  # Sell
+        data.loc[data["MACD"] > data["Signal_Line"], "Signal"] = 1 # Buy
+        data.loc[data["MACD"] < data["Signal_Line"], "Signal"] = -1 # Sell
 
         # Strategy returns
         data["Strategy_Return"] = data["Signal"].shift(1) * data["Return"]
@@ -173,7 +182,7 @@ else:
     data["Cumulative_Strategy_Return"] = (1 + data["Strategy_Return"]).cumprod()
 
     # Plot cumulative performance
-    st.subheader(f"📊 Cumulative Performance: {strategy} vs Market")
+    st.subheader(f"📊 Cumulative Performance: {strategy.split(" (", 1)[0]} vs Market")
     fig, ax = plt.subplots(figsize=(14, 7))
     ax.plot(data.index, data["Cumulative_Market_Return"], label="Market (Buy & Hold)", color="blue")
     ax.plot(data.index, data["Cumulative_Strategy_Return"], label=f"{strategy} Strategy", color="orange")
