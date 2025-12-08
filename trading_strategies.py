@@ -51,7 +51,7 @@ tickers = {
 ticker = st.sidebar.selectbox(f'Select an Asset from {index} or "Index Average":', ["Index Average"] + tickers[index])
 if ticker == "Index Average":
     ticker = tickers_index_average[index]
-start_date = st.sidebar.date_input("Select a Start Date:", date("2020-01-01"))
+start_date = st.sidebar.date_input("Select a Start Date:", date(2020, 1, 1))
 end_date = st.sidebar.date_input("Select an End Date:", date.today())
 
 # Load asset data
@@ -202,3 +202,4 @@ else:
 
 # Author
 st.markdown("""Made by [Alexandre Deroux](https://www.linkedin.com/in/alexandre-deroux).""", unsafe_allow_html=True)
+
