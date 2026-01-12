@@ -201,5 +201,4 @@ else:
     st.sidebar.metric("Total Strategy Return (%):", f"{strategy_return * 100:.2f}")
 
 # Author
-st.markdown("""Made by [Alexandre Deroux](https://www.linkedin.com/in/alexandre-deroux).""", unsafe_allow_html=True)
-
+st.markdown("""Made by [Alexandre Deroux](https://www.linkedin.com/in/alexandre-deroux/en).""", unsafe_allow_html=True)
