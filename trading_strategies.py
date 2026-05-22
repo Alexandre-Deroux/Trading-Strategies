@@ -28,20 +28,20 @@ strategy = st.sidebar.selectbox(
 
 # Asset Parameters
 st.sidebar.header("📌 Asset Parameters")
-index = st.sidebar.selectbox("Select an Index:", ["S&P 500", "NASDAQ-100", "Dow Jones", "CAC 40"])
+index = st.sidebar.selectbox("Select an Index:", ["S&P 500", "Dow Jones", "NASDAQ-100", "CAC 40"])
 tickers_index_average = {
     "S&P 500": "^GSPC",
-    "NASDAQ-100": "^NDX",
     "Dow Jones": "^DJI",
+    "NASDAQ-100": "^NDX",
     "CAC 40": "^FCHI"
 }
 tickers = {
-    "S&P 500": list(pd.read_csv("https://datahub.io/core/s-and-p-500-companies/r/0.csv")["Symbol"]),
-    "NASDAQ-100": list(pd.read_csv("https://datahub.io/core/nasdaq-listings/r/0.csv")["Symbol"]),
+    "S&P 500": list(pd.read_csv("https://datahub.io/core/s-and-p-500-companies-financials/_r/-/data/constituents.csv")["Symbol"]),
     "Dow Jones": [
         "AAPL", "AMGN", "AXP", "BA", "CAT", "CRM", "CSCO", "CVX", "DIS", "DOW", "GS", "HD", "HON", "IBM", "INTC",
         "JNJ", "JPM", "KO", "MCD", "MMM", "MRK", "MSFT", "NKE", "PG", "TRV", "UNH", "V", "VZ", "WBA", "WMT"
     ],
+    "NASDAQ-100": list(pd.read_csv("https://datahub.io/core/nasdaq-listings/r/0.csv")["Symbol"]),
     "CAC 40": [
         "AC.PA", "AI.PA", "AIR.PA", "ALO.PA", "ATO.PA", "BNP.PA", "CRI.PA", "CA.PA", "CAP.PA", "CS.PA", "DSY.PA", "ENGI.PA",
         "ELIOR.PA", "EN.PA", "ERF.PA", "HO.PA", "KER.PA", "LR.PA", "MC.PA", "ML.PA", "MT.PA", "OR.PA", "ORA.PA", "PUB.PA", "RI.PA",
