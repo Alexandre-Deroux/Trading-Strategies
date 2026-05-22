@@ -2,7 +2,7 @@ import streamlit as st
 import yfinance as yf
 import pandas as pd
 import matplotlib.pyplot as plt
-from datetime import date
+from datetime import date, timedelta
 
 # Streamlit page configuration
 st.set_page_config(page_title="Trading Strategies", page_icon="📈", layout="wide")
@@ -52,7 +52,7 @@ ticker = st.sidebar.selectbox(f'Select an Asset from {index} or "Index Average":
 if ticker == "Index Average":
     ticker = tickers_index_average[index]
 start_date = st.sidebar.date_input("Select a Start Date:", date(2020, 1, 1))
-end_date = st.sidebar.date_input("Select an End Date:", date.today())
+end_date = st.sidebar.date_input("Select an End Date:", date.today() - timedelta(days=1))
 
 # Load asset data
 @st.cache_data(show_spinner="Data Loading...")
